@@ -18,5 +18,9 @@ MAIN(){
   echo -e "\nPlease provide an element as an argument."
   read ELEMENT
 
+  # TODO query
+  # if not found
+  # output "I could not find that element in the database."
+  # else OUTPUT d a t a
 }
 MAIN
