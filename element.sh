@@ -15,8 +15,12 @@ OUTPUT(){
 
 
 MAIN(){
-  echo -e "\nPlease provide an element as an argument."
-  read ELEMENT
+  ELEMENT=$1
+  if [[ -z $ELEMENT ]]
+  then
+    echo "Please provide an element as an argument."
+    return
+  fi
 
   BASE_QUERY="SELECT atomic_number,name,symbol,type,atomic_mass,melting_point_celsius,boiling_point_celsius FROM properties LEFT JOIN elements USING(atomic_number) FULL JOIN types USING(type_id)"
   # search by name
@@ -36,11 +40,13 @@ MAIN(){
   fi
   if [[ -z $QUERY_RESULT ]]
   then
-    echo -e "\nI could not find that element in the database."
+    echo "I could not find that element in the database."
+    return
   fi
   echo "$QUERY_RESULT" | while read ATOMIC_NUMBER BAR NAME BAR SYMBOL BAR TYPE BAR ATOMIC_MASS BAR MELTING_POIT BAR BOILING_POINT
   do
     OUTPUT $ATOMIC_NUMBER $NAME $SYMBOL $TYPE $ATOMIC_MASS $MELTING_POIT $BOILING_POINT
   done
 }
-MAIN
+
+MAIN $1
