@@ -1,6 +1,6 @@
 #!/bin/bash
 
-PSQL="psql --username=freecodecamp --dbname=periodic_table -t --no-align -c"
+PSQL="psql --username=freecodecamp --dbname=periodic_table --tuples-only -c"
 
 OUTPUT(){
   # atomic_mass
@@ -38,7 +38,9 @@ MAIN(){
   then
     echo -e "\nI could not find that element in the database."
   fi
-  echo $QUERY_RESULT
-  # else OUTPUT d a t a
+  echo "$QUERY_RESULT" | while read ATOMIC_NUMBER BAR NAME BAR SYMBOL BAR TYPE BAR ATOMIC_MASS BAR MELTING_POIT BAR BOILING_POINT
+  do
+    OUTPUT $ATOMIC_NUMBER $NAME $SYMBOL $TYPE $ATOMIC_MASS $MELTING_POIT $BOILING_POINT
+  done
 }
 MAIN
