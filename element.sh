@@ -18,9 +18,27 @@ MAIN(){
   echo -e "\nPlease provide an element as an argument."
   read ELEMENT
 
-  # TODO query
-  # if not found
-  # output "I could not find that element in the database."
+  BASE_QUERY="SELECT atomic_number,name,symbol,type,atomic_mass,melting_point_celsius,boiling_point_celsius FROM properties LEFT JOIN elements USING(atomic_number) FULL JOIN types USING(type_id)"
+  # search by name
+  QUERY_RESULT=$($PSQL "$BASE_QUERY WHERE name = '$ELEMENT'")
+  if [[ -z $QUERY_RESULT ]]
+  then
+    # search by symbol
+    QUERY_RESULT=$($PSQL "$BASE_QUERY WHERE symbol = '$ELEMENT'")
+  fi
+  if [[ -z $QUERY_RESULT ]]
+  then
+    # search by atomic_number
+    if [[ $ELEMENT =~ ^[0-9]+$ ]]
+    then
+      QUERY_RESULT="$($PSQL "$BASE_QUERY WHERE atomic_number = $ELEMENT")"
+    fi
+  fi
+  if [[ -z $QUERY_RESULT ]]
+  then
+    echo -e "\nI could not find that element in the database."
+  fi
+  echo $QUERY_RESULT
   # else OUTPUT d a t a
 }
 MAIN
